@@ -23,7 +23,7 @@ if ($myuser.contains($groupsearch)) {
 
 #Checks for recently active and enabled users that aren't currently in specified OU group
 $Users = New-Object -TypeName System.Collections.ArrayList
-$myuser = Get-ADUser "Enabled -eq 'True'" -Properties MemberOf| Where-Object {$_.memberof -notmatch 'STIGGOnlineTraining'} | Where-Object {$_.LastLogonDate -ge (Get-Date).AddDays(-5)}| 
+$myuser = Get-ADUser "Enabled -eq 'True'" -Properties MemberOf| Where-Object {$_.memberof -notmatch 'Onboarding'} | Where-Object {$_.LastLogonDate -ge (Get-Date).AddDays(-5)}| 
     Where-Object {$_.LastLogonDate -ne $null} | Select-Object Name,LastLogonDate| Sort-Object LastLogonDate | Export-CSV -Path $ExportPath
 
 $mygroups = $myuser.MemberOf
@@ -37,7 +37,7 @@ foreach ($group in $mygroups) {
     $Users.add($curgroupName) | Out-Null
 }
 $Users
-$groupsearch = "STIGGOnlineTraining"
+$groupsearch = "Onboarding"
 if ($myuser.contains($groupsearch)) {
  Write-Host True -ForegroundColor Green
 
@@ -56,32 +56,32 @@ Get-ADUser -Filter "Enabled -eq 'True'" -Properties LastLogonDate | Where-Object
 #CSV file for last 5 days logged in for active users and not part of certain group
 $timestamp =  Get-Date -format yyyy-MM-dd
 $timestamp = $timestamp.toString()
-$groupsearch = "STIGGOnlineUsers"
+$groupsearch = "Onboarding"
 $ExportPath = "C:\Users\ebaker\Desktop\RecentLog&NoMember_$timestamp.csv"
 $myuser = Get-ADUser -Filter "Enabled -eq 'True'" -Properties LastLogonDate,MemberOf | Where-Object {$_.LastLogonDate -ge (Get-Date).AddDays(-5)} | 
     Where-Object {$_.LastLogonDate -ne $null} | Where-Object {$_.memberof -notmatch $groupsearch} | 
-        Select-Object Name,LastLogonDate, "Not a Member for STIGGOnlineTraining" | Sort-Object LastLogonDate | Export-CSV -NoTypeInformation $ExportPath
+        Select-Object Name,LastLogonDate, "Not a Member for Onboarding" | Sort-Object LastLogonDate | Export-CSV -NoTypeInformation $ExportPath
 
 #CSV file for non members of a certain group
 $timestamp =  Get-Date -format yyyy-MM-dd
 $timestamp = $timestamp.toString()
 $ExportPath = "C:\Users\ebaker\Desktop\NotMember_$timestamp.csv"
-$myuser = Get-ADUser -Filter "Enabled -eq 'True'" -Properties MemberOf,Name | Where-Object {$_.memberof -notmatch 'XRAY Users'} | 
+$myuser = Get-ADUser -Filter "Enabled -eq 'True'" -Properties MemberOf,Name | Where-Object {$_.memberof -notmatch 'IT'} | 
         Select-Object Name | Sort-Object Name | Export-CSV -NoTypeInformation $ExportPath
 
 
 $timestamp =  Get-Date -format yyyy-MM-dd
 $timestamp = $timestamp.toString()
 $ExportPath = "C:\Users\ebaker\Desktop\NotMember_$timestamp.csv"
-$objGroup = Get-ADGroup "XRAY Users"
+$objGroup = Get-ADGroup "IT"
 Get-ADUser -Properties memberOf -Filter {Enabled -eq $true} | Where-Object {$objGroup.DistinguishedName -notin $_.memberOf}
 
 
-$users = (Get-ADUser -Property memberOf).memberof | Where-Object {$_ -like '*GGOnlineTraining*'} | Where-Object {$_.LastLogonDate -ge (Get-Date).AddDays(-5)} | foreach-Object {
+$users = (Get-ADUser -Property memberOf).memberof | Where-Object {$_ -like '*Onboarding*'} | Where-Object {$_.LastLogonDate -ge (Get-Date).AddDays(-5)} | foreach-Object {
     $user.Name
 
 }
-$grouplookup = "GGOnlineTraining"
+$grouplookup = "Onboarding"
 
 
 $ADUser = Get-ADUser ebaker | Select-Object SamAccountName
