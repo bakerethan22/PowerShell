@@ -7,7 +7,7 @@ $ExportPath = 'C:\Users\ebaker\Desktop'
  $userlist = Get-ADUser -Filter "Enabled -eq 'True'" -Properties *
  foreach ($user in $userlist) {
      if( $user.Manager -ne $null ) {
-			    $Manager = Get-ADUser -Identity $user.Manager -Server ($user.Manager.Substring(($user.Manager | Select-String "DC=").Matches.Index + 3, 3) + ".Doncasters.com")
+			    $Manager = Get-ADUser -Identity $user.Manager -Server ($user.Manager.Substring(($user.Manager | Select-String "DC=").Matches.Index + 3, 3) + ".Example.com")
 		        }
      $mygroups = $user.MemberOf
      try {
