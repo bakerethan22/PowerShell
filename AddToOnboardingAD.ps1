@@ -1,10 +1,10 @@
-##Adds users to STIGGOnline
-$Group = "STIGGOnlineTraining"
+##Adds users to Onboarding
+$Group = "Onboarding"
 $userArray = New-Object -TypeName System.Collections.ArrayList
 $timestamp = (Get-Date).AddDays(-5)
 $userlist = Get-ADUser -Property LastLogonDate, MemberOf -Filter {lastLogonDate -ge $timestamp -and Name -like 'da*'}
 foreach ($User in $Userlist) {
-    $MemberOf = $User.memberof | Where-Object {$_ -like '*GGOnlineTraining*'}
+    $MemberOf = $User.memberof | Where-Object {$_ -like '*Onboarding*'}
     if ($null -eq $MemberOf) {
     $User.Name
     $userArray.Add($User) | Out-Null
@@ -17,13 +17,13 @@ foreach ($User in $userArray) {
 } #-WhatIf does a unit test on the output
 
 
-##Remove users from STIGGOnline
-$Group = "STIGGOnlineTraining"
+##Remove users from Onboarding
+$Group = "Onboarding"
 $userArray = New-Object -TypeName System.Collections.ArrayList
 $timestamp = (Get-Date).AddDays(-5)
 $userlist = Get-ADUser -Property LastLogonDate, MemberOf -Filter {lastLogonDate -ge $timestamp -and Name -like 'da*'}
 foreach ($User in $Userlist) {
-    $MemberOf = $User.memberof | Where-Object {$_ -like '*GGOnlineTraining*'}
+    $MemberOf = $User.memberof | Where-Object {$_ -like '*Onboarding*'}
     if ($null -eq $MemberOf) {
     $User.Name
     $userArray.Add($User) | Out-Null
